@@ -1,6 +1,7 @@
 package com.interview.serial_validator_spring_boot.exceptions;
 
 import com.interview.serial_validator_spring_boot.dto.response.FailedSerialResponse;
+import com.interview.serial_validator_spring_boot.dto.response.SerialResponse;
 import com.interview.serial_validator_spring_boot.enums.ResponseStatus;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<FailedSerialResponse> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<SerialResponse> handleValidationException(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
