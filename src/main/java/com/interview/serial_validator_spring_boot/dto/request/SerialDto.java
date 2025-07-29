@@ -8,7 +8,6 @@ import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
-@Setter
 @AllArgsConstructor
 public class SerialDto {
     @Pattern(regexp = "^[A-Z][A-Za-z0-9]{15}$", message = "Checksum failed")
