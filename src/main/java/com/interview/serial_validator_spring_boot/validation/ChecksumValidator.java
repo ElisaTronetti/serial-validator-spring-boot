@@ -1,18 +1,38 @@
 package com.interview.serial_validator_spring_boot.validation;
 
+import com.interview.serial_validator_spring_boot.service.SerialServiceImpl;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ChecksumValidator implements ConstraintValidator<ValidChecksum, String> {
+    private final SerialServiceImpl serialService;
+
+    @Autowired
+    public ChecksumValidator(SerialServiceImpl serialService) {
+        this.serialService = serialService;
+    }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null) return true;
+        if (serialService.isAlreadyValidated(value)) {
+            return true;
+        }
 
+        return computeChecksum(value);
+    }
+
+    private boolean computeChecksum(String value) {
         int sum = 0;
         for (char c : value.toCharArray()) {
             sum += c;
         }
-        return sum % 7 == 0;
+        boolean isValid = sum % 7 == 0;
+        if (isValid) {
+            serialService.cacheSerial(value);
+        }
+        return isValid;
     }
 }
