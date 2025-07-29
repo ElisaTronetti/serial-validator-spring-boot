@@ -1,26 +1,23 @@
-package com.interview.serial_validator_spring_boot.service;
+package com.interview.serial_validator_spring_boot.validation;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service
-public class SerialServiceImpl implements SerialService {
+@Component
+public class SerialValidationCache {
     private final Set<String> validSerials = ConcurrentHashMap.newKeySet();
 
-    @Override
     public void cacheSerial(String serial) {
         validSerials.add(serial);
     }
 
-    @Override
     public boolean isAlreadyValidated(String serial) {
         return validSerials.contains(serial);
     }
 
-    @Override
     public Collection<String> getSerials() {
         return validSerials;
     }

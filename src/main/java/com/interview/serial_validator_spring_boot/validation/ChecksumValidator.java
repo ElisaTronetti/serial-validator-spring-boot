@@ -1,6 +1,5 @@
 package com.interview.serial_validator_spring_boot.validation;
 
-import com.interview.serial_validator_spring_boot.service.SerialServiceImpl;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +7,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ChecksumValidator implements ConstraintValidator<ValidChecksum, String> {
-    private final SerialServiceImpl serialService;
+    private final SerialValidationCache serialValidationCache;
 
     @Autowired
-    public ChecksumValidator(SerialServiceImpl serialService) {
-        this.serialService = serialService;
+    public ChecksumValidator(SerialValidationCache serialService) {
+        this.serialValidationCache = serialService;
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (serialService.isAlreadyValidated(value)) {
+        if (serialValidationCache.isAlreadyValidated(value)) {
             return true;
         }
 
@@ -31,7 +30,7 @@ public class ChecksumValidator implements ConstraintValidator<ValidChecksum, Str
         }
         boolean isValid = sum % 7 == 0;
         if (isValid) {
-            serialService.cacheSerial(value);
+            serialValidationCache.cacheSerial(value);
         }
         return isValid;
     }
